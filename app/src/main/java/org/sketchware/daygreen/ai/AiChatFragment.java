@@ -294,7 +294,7 @@ public class AiChatFragment extends Fragment {
     private void updateAttachTint() {
         boolean active = deepThinking || !attachments.isEmpty();
         binding.btnAttach.setImageTintList(ColorStateList.valueOf(themeColor(
-                active ? com.google.android.material.R.attr.colorPrimary
+                active ? com.google.android.material.R.attr.colorSecondary
                         : com.google.android.material.R.attr.colorOnSurfaceVariant)));
     }
 
@@ -305,7 +305,7 @@ public class AiChatFragment extends Fragment {
         Context ctx = requireContext();
         int onSurface = themeColor(com.google.android.material.R.attr.colorOnSurface);
         int variant = themeColor(com.google.android.material.R.attr.colorOnSurfaceVariant);
-        int primary = themeColor(com.google.android.material.R.attr.colorPrimary);
+        int accent = themeColor(com.google.android.material.R.attr.colorSecondary);
 
         LinearLayout box = new LinearLayout(ctx);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -328,7 +328,7 @@ public class AiChatFragment extends Fragment {
         box.addView(divider, dlp);
 
         // Deep thinking (di bawah import file & foto)
-        LinearLayout think = menuRow(ICON_BULB, "Deep thinking", onSurface, deepThinking ? primary : variant, null);
+        LinearLayout think = menuRow(ICON_BULB, "Deep thinking", onSurface, deepThinking ? accent : variant, null);
         SwitchMaterial sw = new SwitchMaterial(ctx);
         sw.setChecked(deepThinking);
         sw.setClickable(false);
@@ -337,7 +337,7 @@ public class AiChatFragment extends Fragment {
             deepThinking = !deepThinking;
             sw.setChecked(deepThinking);
             uiPrefs.edit().putBoolean(KEY_DEEP_THINKING, deepThinking).apply();
-            ((ImageView) think.getChildAt(0)).setImageTintList(ColorStateList.valueOf(deepThinking ? primary : variant));
+            ((ImageView) think.getChildAt(0)).setImageTintList(ColorStateList.valueOf(deepThinking ? accent : variant));
             updateAttachTint();
         });
         box.addView(think);
@@ -352,7 +352,7 @@ public class AiChatFragment extends Fragment {
         Context ctx = requireContext();
         int onSurface = themeColor(com.google.android.material.R.attr.colorOnSurface);
         int variant = themeColor(com.google.android.material.R.attr.colorOnSurfaceVariant);
-        int primary = themeColor(com.google.android.material.R.attr.colorPrimary);
+        int accent = themeColor(com.google.android.material.R.attr.colorSecondary);
 
         int curProvider = clampProvider(store.getProviderIndex());
         int curModel = store.getModelIndex();
@@ -389,14 +389,14 @@ public class AiChatFragment extends Fragment {
                 TextView name = new TextView(ctx);
                 name.setText(provider.models[j]);
                 name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                name.setTextColor(selected ? primary : onSurface);
+                name.setTextColor(selected ? accent : onSurface);
                 if (selected) name.setTypeface(Typeface.DEFAULT_BOLD);
                 row.addView(name, new LinearLayout.LayoutParams(0, -2, 1f));
 
                 if (selected) {
                     ImageView check = new ImageView(ctx);
                     PathIcon icon = new PathIcon(ICON_CHECK);
-                    icon.setTint(primary);
+                    icon.setTint(accent);
                     check.setImageDrawable(icon);
                     row.addView(check, new LinearLayout.LayoutParams(dp(20), dp(20)));
                 }
@@ -422,7 +422,7 @@ public class AiChatFragment extends Fragment {
             msg.setTextColor(variant);
             msg.setPadding(dp(12), dp(12), dp(12), dp(8));
             list.addView(msg);
-            list.addView(menuRow(ICON_SETTINGS, "Buka pengaturan AI", onSurface, primary, v -> openSettings()));
+            list.addView(menuRow(ICON_SETTINGS, "Buka pengaturan AI", onSurface, accent, v -> openSettings()));
         }
 
         ScrollView sv = new ScrollView(ctx);
