@@ -102,13 +102,13 @@ public class ConfigActivity extends BaseAppCompatActivity {
         }
         dataStore.persist();
     }
-    
+
     public static List<String> getVisibleDesignTabs() {
         String saved = DataStore.getInstance().getString(SETTING_VISIBLE_DESIGN_TABS, "view,event");
         if (saved == null || saved.trim().isEmpty()) {
             return Arrays.asList("view", "event");
         }
-        List<String> validTabs = Arrays.asList("view", "event", "component", "java", "resource");
+        List<String> validTabs = Arrays.asList("view", "event", "component", "java", "resource", "ai");
         List<String> result = new ArrayList<>();
         for (String tab : validTabs) {
             if (saved.contains(tab)) {
@@ -155,16 +155,16 @@ public class ConfigActivity extends BaseAppCompatActivity {
         settings.clear();
 
         List<String> keys = Arrays.asList(SETTING_ALWAYS_SHOW_BLOCKS,
-                SETTING_BACKUP_DIRECTORY,
-                SETTING_ROOT_AUTO_INSTALL_PROJECTS,
-                SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING,
-                SETTING_SHOW_BUILT_IN_BLOCKS,
-                SETTING_SHOW_EVERY_SINGLE_BLOCK,
-                SETTING_USE_NEW_VERSION_CONTROL,
-                SETTING_USE_ASD_HIGHLIGHTER,
-                SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
-                SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
-                SETTING_VISIBLE_DESIGN_TABS);
+            SETTING_BACKUP_DIRECTORY,
+            SETTING_ROOT_AUTO_INSTALL_PROJECTS,
+            SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING,
+            SETTING_SHOW_BUILT_IN_BLOCKS,
+            SETTING_SHOW_EVERY_SINGLE_BLOCK,
+            SETTING_USE_NEW_VERSION_CONTROL,
+            SETTING_USE_ASD_HIGHLIGHTER,
+            SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
+            SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
+            SETTING_VISIBLE_DESIGN_TABS);
 
         for (String key : keys) {
             settings.put(key, getDefaultValue(key));
@@ -175,15 +175,15 @@ public class ConfigActivity extends BaseAppCompatActivity {
     public static Object getDefaultValue(String key) {
         return switch (key) {
             case SETTING_ALWAYS_SHOW_BLOCKS,
-                 SETTING_ROOT_AUTO_INSTALL_PROJECTS, SETTING_SHOW_BUILT_IN_BLOCKS,
-                 SETTING_SHOW_EVERY_SINGLE_BLOCK, SETTING_USE_NEW_VERSION_CONTROL,
-                 SETTING_USE_ASD_HIGHLIGHTER -> false;
+            SETTING_ROOT_AUTO_INSTALL_PROJECTS, SETTING_SHOW_BUILT_IN_BLOCKS,
+            SETTING_SHOW_EVERY_SINGLE_BLOCK, SETTING_USE_NEW_VERSION_CONTROL,
+            SETTING_USE_ASD_HIGHLIGHTER -> false;
             case SETTING_BACKUP_DIRECTORY -> "/.sketchware/backups/";
             case SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING -> true;
             case SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH ->
-                    "/.sketchware/resources/block/My Block/palette.json";
+            "/.sketchware/resources/block/My Block/palette.json";
             case SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH ->
-                    "/.sketchware/resources/block/My Block/block.json";
+            "/.sketchware/resources/block/My Block/block.json";
             case SETTING_VISIBLE_DESIGN_TABS -> "view,event";
             default -> throw new IllegalArgumentException("Unknown key '" + key + "'!");
         };
@@ -209,10 +209,10 @@ public class ConfigActivity extends BaseAppCompatActivity {
             int bottom = view1.getPaddingBottom();
 
             ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top + insets.top, right + insets.right, bottom);
-                return i;
-            });
+                    Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                    v.setPadding(left + insets.left, top + insets.top, right + insets.right, bottom);
+                    return i;
+                });
         }
 
         {
@@ -223,10 +223,10 @@ public class ConfigActivity extends BaseAppCompatActivity {
             int bottom = view1.getPaddingBottom();
 
             ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
+                    Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                    v.setPadding(left + insets.left, top, right + insets.right, bottom + insets.bottom);
+                    return i;
+                });
         }
     }
 
@@ -248,20 +248,20 @@ public class ConfigActivity extends BaseAppCompatActivity {
 
         var installWithRoot = createSwitchPreference(R.drawable.ic_mtrl_android, "Install projects with root access", "Automatically installs project APKs after building using root access.", SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
         installWithRoot.sw_enable.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                Shell.getShell(shell -> {
-                    if (!shell.isRoot()) {
-                        Snackbar.make(content, "Couldn't acquire root access", BaseTransientBottomBar.LENGTH_SHORT).show();
-                        installWithRoot.sw_enable.setChecked(false);
-                    } else {
-                        setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, true);
-                        setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, false);
-                    }
-                });
-            } else {
-                setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
-            }
-        });
+                if (isChecked) {
+                    Shell.getShell(shell -> {
+                            if (!shell.isRoot()) {
+                                Snackbar.make(content, "Couldn't acquire root access", BaseTransientBottomBar.LENGTH_SHORT).show();
+                                installWithRoot.sw_enable.setChecked(false);
+                            } else {
+                                setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, true);
+                                setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, false);
+                            }
+                        });
+                } else {
+                    setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
+                }
+            });
         rootCategory.addLibraryItem(installWithRoot, true);
         rootCategory.addLibraryItem(createSwitchPreference(R.drawable.ic_mtrl_apk_install, "Launch projects after installing", "Opens projects automatically after auto-installation using root.", SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING, true), false);
 
@@ -271,34 +271,34 @@ public class ConfigActivity extends BaseAppCompatActivity {
 
         var installWithShizuku = createSwitchPreference(R.drawable.ic_mtrl_android, "Install projects with Shizuku access", "Automatically installs project APKs after building using Shizuku access.", SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, false);
         installWithShizuku.sw_enable.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                if (mod.hilal.saif.util.ShizukuUtil.isShizukuRunning()) {
-                    if (mod.hilal.saif.util.ShizukuUtil.hasPermission()) {
-                        setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, true);
-                        setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
+                if (isChecked) {
+                    if (mod.hilal.saif.util.ShizukuUtil.isShizukuRunning()) {
+                        if (mod.hilal.saif.util.ShizukuUtil.hasPermission()) {
+                            setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, true);
+                            setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
+                        } else {
+                            rikka.shizuku.Shizuku.addRequestPermissionResultListener(new rikka.shizuku.Shizuku.OnRequestPermissionResultListener() {
+                                    @Override
+                                    public void onRequestPermissionResult(int requestCode, int grantResult) {
+                                        if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                            setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, true);
+                                            setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
+                                        } else {
+                                            installWithShizuku.sw_enable.setChecked(false);
+                                        }
+                                        rikka.shizuku.Shizuku.removeRequestPermissionResultListener(this);
+                                    }
+                                });
+                            rikka.shizuku.Shizuku.requestPermission(100);
+                        }
                     } else {
-                        rikka.shizuku.Shizuku.addRequestPermissionResultListener(new rikka.shizuku.Shizuku.OnRequestPermissionResultListener() {
-                            @Override
-                            public void onRequestPermissionResult(int requestCode, int grantResult) {
-                                if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                                    setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, true);
-                                    setSetting(SETTING_ROOT_AUTO_INSTALL_PROJECTS, false);
-                                } else {
-                                    installWithShizuku.sw_enable.setChecked(false);
-                                }
-                                rikka.shizuku.Shizuku.removeRequestPermissionResultListener(this);
-                            }
-                        });
-                        rikka.shizuku.Shizuku.requestPermission(100);
+                        Snackbar.make(content, "Shizuku is not running", BaseTransientBottomBar.LENGTH_SHORT).show();
+                        installWithShizuku.sw_enable.setChecked(false);
                     }
                 } else {
-                    Snackbar.make(content, "Shizuku is not running", BaseTransientBottomBar.LENGTH_SHORT).show();
-                    installWithShizuku.sw_enable.setChecked(false);
+                    setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, false);
                 }
-            } else {
-                setSetting(SETTING_SHIZUKU_AUTO_INSTALL_PROJECTS, false);
-            }
-        });
+            });
         shizukuCategory.addLibraryItem(installWithShizuku, true);
         shizukuCategory.addLibraryItem(createSwitchPreference(R.drawable.ic_mtrl_apk_install, "Launch projects after installing", "Opens projects automatically after auto-installation using Shizuku.", SETTING_SHIZUKU_AUTO_OPEN_AFTER_INSTALLING, true), false);
 
@@ -313,10 +313,10 @@ public class ConfigActivity extends BaseAppCompatActivity {
         preferences.add(backupCategory);
 
         backupCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_folder, "Backup directory", "The default directory is /Internal storage" + getBackupPath(), v -> {
-            DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
-            binding.inputText.setText(getBackupPath());
-            binding.chipGroupTypes.setVisibility(View.GONE);
-            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                    DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
+                    binding.inputText.setText(getBackupPath());
+                    binding.chipGroupTypes.setVisibility(View.GONE);
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setView(binding.getRoot())
                     .setTitle("Backup directory")
                     .setMessage("Directory inside /Internal storage/, e.g. .sketchware/backups")
@@ -324,108 +324,108 @@ public class ConfigActivity extends BaseAppCompatActivity {
                     .setPositiveButton(R.string.common_word_save, null)
                     .create();
 
-            dialog.setOnShowListener(dialogInterface -> {
-                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(
-                        Helper.getDialogDismissListener(dialogInterface));
-                Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                positiveButton.setOnClickListener(view -> {
-                    setSetting(SETTING_BACKUP_DIRECTORY, Helper.getText(binding.inputText));
-                    dialog.dismiss();
-                });
+                    dialog.setOnShowListener(dialogInterface -> {
+                            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(
+                                Helper.getDialogDismissListener(dialogInterface));
+                            Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                            positiveButton.setOnClickListener(view -> {
+                                    setSetting(SETTING_BACKUP_DIRECTORY, Helper.getText(binding.inputText));
+                                    dialog.dismiss();
+                                });
 
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                binding.inputText.requestFocus();
-            });
-            dialog.show();
-        }), true);
+                            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                            binding.inputText.requestFocus();
+                        });
+                    dialog.show();
+                }), true);
 
         backupCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_edit, "Backup filename format", "Default is \"$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd'T'HHmmss)\"", v -> {
-            DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
-            binding.chipGroupTypes.setVisibility(View.GONE);
-            binding.inputText.setText(getBackupFileName());
+                    DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
+                    binding.chipGroupTypes.setVisibility(View.GONE);
+                    binding.inputText.setText(getBackupFileName());
 
-            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setView(binding.getRoot())
                     .setTitle("Backup filename format")
                     .setMessage("This defines how SWB backup files get named.\n" +
-                            "Available variables:\n" +
-                            " - $projectName - Project name\n" +
-                            " - $versionCode - App version code\n" +
-                            " - $versionName - App version name\n" +
-                            " - $pkgName - App package name\n" +
-                            " - $timeInMs - Time during backup in milliseconds\n" +
-                            "\n" +
-                            "Additionally, you can format your own time like this using Java's date formatter syntax:\n" +
-                            "$time(yyyy-MM-dd'T'HHmmss)\n")
+                        "Available variables:\n" +
+                        " - $projectName - Project name\n" +
+                        " - $versionCode - App version code\n" +
+                        " - $versionName - App version name\n" +
+                        " - $pkgName - App package name\n" +
+                        " - $timeInMs - Time during backup in milliseconds\n" +
+                        "\n" +
+                        "Additionally, you can format your own time like this using Java's date formatter syntax:\n" +
+                        "$time(yyyy-MM-dd'T'HHmmss)\n")
                     .setNegativeButton(R.string.common_word_cancel, null)
                     .setPositiveButton(R.string.common_word_save, null)
                     .setNeutralButton(R.string.common_word_reset, (dialogInterface, which) -> {
-                        DataStore.getInstance().putString(SETTING_BACKUP_FILENAME, null);
-                        Snackbar.make(content, "Reset to default complete.", BaseTransientBottomBar.LENGTH_SHORT).show();
-                    })
+                            DataStore.getInstance().putString(SETTING_BACKUP_FILENAME, null);
+                            Snackbar.make(content, "Reset to default complete.", BaseTransientBottomBar.LENGTH_SHORT).show();
+                        })
                     .create();
 
-            dialog.setOnShowListener(dialogInterface -> {
-                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(
-                        Helper.getDialogDismissListener(dialog));
-                Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                positiveButton.setOnClickListener(view -> {
-                    setSetting(SETTING_BACKUP_FILENAME, Helper.getText(binding.inputText));
-                    dialog.dismiss();
-                });
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                binding.inputText.requestFocus();
-            });
-            dialog.show();
-        }), false);
+                    dialog.setOnShowListener(dialogInterface -> {
+                            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(
+                                Helper.getDialogDismissListener(dialog));
+                            Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                            positiveButton.setOnClickListener(view -> {
+                                    setSetting(SETTING_BACKUP_FILENAME, Helper.getText(binding.inputText));
+                                    dialog.dismiss();
+                                });
+                            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                            binding.inputText.requestFocus();
+                        });
+                    dialog.show();
+                }), false);
 
         LibraryCategoryView appearanceCategory = new LibraryCategoryView(this);
         appearanceCategory.setTitle(Helper.getResString(R.string.settings_appearance));
         preferences.add(appearanceCategory);
 
         appearanceCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_palette, Helper.getResString(R.string.settings_appearance), Helper.getResString(R.string.settings_appearance_description), v -> {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            intent.putExtra(SettingsActivity.FRAGMENT_TAG_EXTRA, SettingsActivity.SETTINGS_APPEARANCE_FRAGMENT);
-            startActivity(intent);
-        }), true);
-        
-        appearanceCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_devices, Helper.getResString(R.string.settings_design_tabs_title), Helper.getResString(R.string.settings_design_tabs_desc), v -> {
-            String[] tabNames = {"View", "Event", "Component", "Java & Kotlin", "Resource"};
-            String[] tabKeys = {"view", "event", "component", "java", "resource"};
-            boolean[] checkedItems = new boolean[5];
-            
-            List<String> currentTabs = getVisibleDesignTabs();
-            for (int i = 0; i < tabKeys.length; i++) {
-                checkedItems[i] = currentTabs.contains(tabKeys[i]);
-            }
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    intent.putExtra(SettingsActivity.FRAGMENT_TAG_EXTRA, SettingsActivity.SETTINGS_APPEARANCE_FRAGMENT);
+                    startActivity(intent);
+                }), true);
 
-            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+        appearanceCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_devices, Helper.getResString(R.string.settings_design_tabs_title), Helper.getResString(R.string.settings_design_tabs_desc), v -> {
+                    String[] tabNames = {"View", "Event", "Component", "Java & Kotlin", "Resource", "Agent"};
+                    String[] tabKeys = {"view", "event", "component", "java", "resource", "ai"};
+                    boolean[] checkedItems = new boolean[6];
+
+                    List<String> currentTabs = getVisibleDesignTabs();
+                    for (int i = 0; i < tabKeys.length; i++) {
+                        checkedItems[i] = currentTabs.contains(tabKeys[i]);
+                    }
+
+                    AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setTitle(Helper.getResString(R.string.settings_design_tabs_title))
                     .setMultiChoiceItems(tabNames, checkedItems, (dialog1, which, isChecked) -> {
-                        checkedItems[which] = isChecked;
-                    })
+                            checkedItems[which] = isChecked;
+                        })
                     .setNegativeButton(R.string.common_word_cancel, null)
                     .setPositiveButton(R.string.common_word_save, null)
                     .create();
 
-            dialog.setOnShowListener(dialogInterface -> {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
-                    List<String> selectedKeys = new ArrayList<>();
-                    for (int i = 0; i < checkedItems.length; i++) {
-                        if (checkedItems[i]) {
-                            selectedKeys.add(tabKeys[i]);
-                        }
-                    }
-                    if (selectedKeys.isEmpty()) {
-                        SketchwareUtil.toast(Helper.getResString(R.string.design_tabs_empty_error));
-                    } else {
-                        setSetting(SETTING_VISIBLE_DESIGN_TABS, TextUtils.join(",", selectedKeys));
-                        dialog.dismiss();
-                    }
-                });
-            });
-            dialog.show();
-        }), false);
+                    dialog.setOnShowListener(dialogInterface -> {
+                            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
+                                    List<String> selectedKeys = new ArrayList<>();
+                                    for (int i = 0; i < checkedItems.length; i++) {
+                                        if (checkedItems[i]) {
+                                            selectedKeys.add(tabKeys[i]);
+                                        }
+                                    }
+                                    if (selectedKeys.isEmpty()) {
+                                        SketchwareUtil.toast(Helper.getResString(R.string.design_tabs_empty_error));
+                                    } else {
+                                        setSetting(SETTING_VISIBLE_DESIGN_TABS, TextUtils.join(",", selectedKeys));
+                                        dialog.dismiss();
+                                    }
+                                });
+                        });
+                    dialog.show();
+                }), false);
 
         LibraryCategoryView systemCategory = new LibraryCategoryView(this);
         systemCategory.setTitle(Helper.getResString(R.string.main_drawer_title_system_settings));
@@ -456,8 +456,8 @@ public class ConfigActivity extends BaseAppCompatActivity {
         preference.sw_enable.setVisibility(View.VISIBLE);
         preference.sw_enable.setChecked(DataStore.getInstance().getBoolean(key, defaultValue));
         preference.sw_enable.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            setSetting(key, isChecked);
-        });
+                setSetting(key, isChecked);
+            });
         preference.setOnClickListener(v -> preference.sw_enable.toggle());
         return preference;
     }
@@ -473,8 +473,8 @@ public class ConfigActivity extends BaseAppCompatActivity {
         android.content.SharedPreferences sp = getSharedPreferences("P12", android.content.Context.MODE_PRIVATE);
         preference.sw_enable.setChecked(sp.getBoolean(key, defaultValue));
         preference.sw_enable.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sp.edit().putBoolean(key, isChecked).apply();
-        });
+                sp.edit().putBoolean(key, isChecked).apply();
+            });
         preference.setOnClickListener(v -> preference.sw_enable.toggle());
         return preference;
     }

@@ -134,6 +134,7 @@ import mod.khaled.logcat.LogReaderActivity;
 
 import org.sketchware.daygreen.FileCheckUtils;
 import org.sketchware.daygreen.builds.BuildCache;
+import org.sketchware.daygreen.ai.AiChatFragment;
 
 import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.ManageAppCompatActivity;
@@ -179,59 +180,59 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     public static boolean isFirstLaunch = true;
     private Bundle mSavedInstanceState;
     private final ActivityResultLauncher<Intent> openCollectionManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            if (viewTabAdapter != null) {
-                viewTabAdapter.j();
+            if (result.getResultCode() == RESULT_OK) {
+                if (viewTabAdapter != null) {
+                    viewTabAdapter.j();
+                }
             }
-        }
-    });
+        });
     private final ActivityResultLauncher<Intent> openResourcesManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            viewDirty = true;
-            if (viewTabAdapter != null && activeTabs.size() > viewPager.getCurrentItem() && activeTabs.get(viewPager.getCurrentItem()).equals("view")) {
-                viewTabAdapter.i();
-                refreshViewTabAdapter();
+            if (result.getResultCode() == RESULT_OK) {
+                viewDirty = true;
+                if (viewTabAdapter != null && activeTabs.size() > viewPager.getCurrentItem() && activeTabs.get(viewPager.getCurrentItem()).equals("view")) {
+                    viewTabAdapter.i();
+                    refreshViewTabAdapter();
+                }
             }
-        }
-    });
+        });
     private final ActivityResultLauncher<Intent> openViewCodeEditor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            viewDirty = true;
-            if (viewTabAdapter != null) {
-                viewTabAdapter.i();
+            if (result.getResultCode() == RESULT_OK) {
+                viewDirty = true;
+                if (viewTabAdapter != null) {
+                    viewTabAdapter.i();
+                }
             }
-        }
-    });
+        });
     private rs eventTabAdapter;
     private br componentTabAdapter;
     private final ActivityResultLauncher<Intent> openImageManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            viewDirty = true;
-            refresh();
-        }
-    });
-    public final ActivityResultLauncher<Intent> changeOpenFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == Activity.RESULT_OK) {
-            assert result.getData() != null;
-            projectFile = result.getData().getParcelableExtra("project_file");
-            refresh();
-        }
-    });
-    private final ActivityResultLauncher<Intent> openLibraryManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            viewDirty = true;
-            refresh();
-            if (viewTabAdapter != null) {
-                viewTabAdapter.n();
+            if (result.getResultCode() == RESULT_OK) {
+                viewDirty = true;
+                refresh();
             }
-        }
-    });
+        });
+    public final ActivityResultLauncher<Intent> changeOpenFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                assert result.getData() != null;
+                projectFile = result.getData().getParcelableExtra("project_file");
+                refresh();
+            }
+        });
+    private final ActivityResultLauncher<Intent> openLibraryManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                viewDirty = true;
+                refresh();
+                if (viewTabAdapter != null) {
+                    viewTabAdapter.n();
+                }
+            }
+        });
     private final ActivityResultLauncher<Intent> openViewManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            viewDirty = true;
-            refresh();
-        }
-    });
+            if (result.getResultCode() == RESULT_OK) {
+                viewDirty = true;
+                refresh();
+            }
+        });
     private BuildTask currentBuildTask;
     private final BroadcastReceiver buildCancelReceiver = new BroadcastReceiver() {
         @Override
@@ -336,7 +337,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             }
         }
     }
-    
+
     private List<String> buildActiveTabs(List<String> visibleTabs) {
         List<String> tabs = new ArrayList<>(visibleTabs);
         if (org.sketchware.daygreen.git.GitManager.hasGitRepo(sc_id) && !tabs.contains("git")) {
@@ -417,7 +418,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void refresh() {
         refreshFileSelector();
         if (activeTabs.isEmpty() || activeTabs.size() <= viewPager.getCurrentItem()) return;
-        
+
         String currentTabId = activeTabs.get(viewPager.getCurrentItem());
         if (currentTabId.equals("view")) {
             refreshViewTabAdapter();
@@ -444,15 +445,15 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         new CompileErrorSaver(sc_id).writeLogsToFile(error);
         Snackbar snackbar = Snackbar.make(coordinatorLayout, "Show compile log", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(Helper.getResString(R.string.common_word_show), v -> {
-            if (!mB.a()) {
-                snackbar.dismiss();
-                Intent intent = new Intent(getApplicationContext(), CompileLogActivity.class);
-                intent.putExtra("error", error);
-                intent.putExtra("sc_id", sc_id);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            }
-        });
+                if (!mB.a()) {
+                    snackbar.dismiss();
+                    Intent intent = new Intent(getApplicationContext(), CompileLogActivity.class);
+                    intent.putExtra("error", error);
+                    intent.putExtra("sc_id", sc_id);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                }
+            });
         snackbar.show();
     }
 
@@ -488,32 +489,32 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         File apkUri = new File(q.finalToInstallApkPath);
         long length = apkUri.length();
         Shell.getShell(shell -> {
-            if (shell.isRoot()) {
-                List<String> stdout = new LinkedList<>();
-                List<String> stderr = new LinkedList<>();
+                if (shell.isRoot()) {
+                    List<String> stdout = new LinkedList<>();
+                    List<String> stderr = new LinkedList<>();
 
-                Shell.cmd("cat " + apkUri + " | pm install -r -d -S " + length).to(stdout, stderr).submit(result -> {
-                    if (result.isSuccess()) {
-                        SketchwareUtil.toast("Package installed successfully!");
-                        if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
-                            Intent launcher = getPackageManager().getLaunchIntentForPackage(q.packageName);
-                            if (launcher != null) {
-                                startActivity(launcher);
+                    Shell.cmd("cat " + apkUri + " | pm install -r -d -S " + length).to(stdout, stderr).submit(result -> {
+                            if (result.isSuccess()) {
+                                SketchwareUtil.toast("Package installed successfully!");
+                                if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
+                                    Intent launcher = getPackageManager().getLaunchIntentForPackage(q.packageName);
+                                    if (launcher != null) {
+                                        startActivity(launcher);
+                                    } else {
+                                        SketchwareUtil.toastError("Couldn't launch project, either not installed or not with launcher activity.");
+                                    }
+                                }
                             } else {
-                                SketchwareUtil.toastError("Couldn't launch project, either not installed or not with launcher activity.");
+                                String sharedErrorMessage = "Failed to install package, result code: " + result.getCode() + ". ";
+                                SketchwareUtil.toastError(sharedErrorMessage + "Logs are available in /Internal storage/.sketchware/debug.txt", Toast.LENGTH_LONG);
+                                LogUtil.e("DesignActivity", sharedErrorMessage + "stdout: " + stdout + ", stderr: " + stderr);
                             }
-                        }
-                    } else {
-                        String sharedErrorMessage = "Failed to install package, result code: " + result.getCode() + ". ";
-                        SketchwareUtil.toastError(sharedErrorMessage + "Logs are available in /Internal storage/.sketchware/debug.txt", Toast.LENGTH_LONG);
-                        LogUtil.e("DesignActivity", sharedErrorMessage + "stdout: " + stdout + ", stderr: " + stderr);
-                    }
-                });
-            } else {
-                SketchwareUtil.toastError("No root access granted. Continuing using default package install prompt.");
-                requestPackageInstallerInstall();
-            }
-        });
+                        });
+                } else {
+                    SketchwareUtil.toastError("No root access granted. Continuing using default package install prompt.");
+                    requestPackageInstallerInstall();
+                }
+            });
     }
 
     private void installWithShizuku() {
@@ -642,7 +643,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
         setContentView(R.layout.design);
-        
+
         if (!isStoragePermissionGranted()) {
             finish();
         }
@@ -677,104 +678,103 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         btnRun = findViewById(R.id.btn_run);
         btnRun.setOnClickListener(v -> {
-            if (currentBuildTask != null && !currentBuildTask.isCanceling && currentBuildTask.isBuilding) {
-                currentBuildTask.cancelBuild();
-                return;
-            }
+                if (currentBuildTask != null && !currentBuildTask.isCanceling && currentBuildTask.isBuilding) {
+                    currentBuildTask.cancelBuild();
+                    return;
+                }
 
-            if (currentBuildTask != null && currentBuildTask.isBuilding) return;
+                if (currentBuildTask != null && currentBuildTask.isBuilding) return;
 
-            if (!DRProjectTracker.isAllowBuildNow(DesignActivity.this)) return;
+                if (!DRProjectTracker.isAllowBuildNow(DesignActivity.this)) return;
 
-            if (!FileCheckUtils.isAaptDownloaded(this) || !FileCheckUtils.isSdkDownloaded(this)) {
-                showMissingToolsDialog();
-                return;
-            }
+                if (!FileCheckUtils.isAaptDownloaded(this) || !FileCheckUtils.isSdkDownloaded(this)) {
+                    showMissingToolsDialog();
+                    return;
+                }
 
-            BuildTask buildTask = new BuildTask(this);
-            currentBuildTask = buildTask;
-            buildTask.execute();
-        });
+                BuildTask buildTask = new BuildTask(this);
+                currentBuildTask = buildTask;
+                buildTask.execute();
+            });
 
         btnOptions = findViewById(R.id.btn_options);
         View splitButton = findViewById(R.id.run_split_button);
         btnOptions.setOnClickListener(v -> {
-            btnOptions.setIconResource(R.drawable.ic_mtrl_arrow_up);
-            try {
-                Field field = bottomPopupMenu.getClass().getDeclaredField("mPopup");
-                field.setAccessible(true);
-                Object menuPopupHelper = field.get(bottomPopupMenu);
-                Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-                setForceIcons.invoke(menuPopupHelper, true);
-            } catch (Exception e) {
-                Log.e("DesignActivity", "Failed to force icons in PopupMenu", e);
-            }
-            bottomPopupMenu.show();
-        });
+                btnOptions.setIconResource(R.drawable.ic_mtrl_arrow_up);
+                try {
+                    Field field = bottomPopupMenu.getClass().getDeclaredField("mPopup");
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(bottomPopupMenu);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                } catch (Exception e) {
+                    Log.e("DesignActivity", "Failed to force icons in PopupMenu", e);
+                }
+                bottomPopupMenu.show();
+            });
 
         bottomPopupMenu = new PopupMenu(this, splitButton != null ? splitButton : btnOptions, Gravity.TOP);
         bottomMenu = bottomPopupMenu.getMenu();
         bottomMenu.add(0, 1, 0, "Build Settings").setOnMenuItemClickListener(item -> {
-            BuildSettingsBottomSheet sheet = BuildSettingsBottomSheet.newInstance(sc_id);
-            sheet.show(getSupportFragmentManager(), BuildSettingsBottomSheet.TAG);
-            return true;
-        });
+                BuildSettingsBottomSheet sheet = BuildSettingsBottomSheet.newInstance(sc_id);
+                sheet.show(getSupportFragmentManager(), BuildSettingsBottomSheet.TAG);
+                return true;
+            });
         bottomMenu.add(0, 2, 1, "Clean temporary files").setVisible(false).setOnMenuItemClickListener(item -> {
-            new Thread(() -> {
-                FileUtil.deleteFile(q.projectMyscPath);
-                new BuildCache(sc_id).invalidateAll();
-                
-                String nativeLibsPath = new FilePathUtil().getPathNativelibs(sc_id);
-                FileUtil.deleteFile(nativeLibsPath);
-                
-                File nativeBuildCache = new File(getApplicationContext().getCacheDir(), "native_build");
-                if (nativeBuildCache.exists()) {
-                    FileUtil.deleteFile(nativeBuildCache.getAbsolutePath());
-                }
-                
-                updateBottomMenu();
-                runOnUiThread(() -> SketchwareUtil.toast("Done cleaning temporary files!"));
-            }).start();
-            return true;
-        });
+                new Thread(() -> {
+                        FileUtil.deleteFile(q.projectMyscPath);
+                        new BuildCache(sc_id).invalidateAll();
+
+                        String nativeLibsPath = new FilePathUtil().getPathNativelibs(sc_id);
+                        FileUtil.deleteFile(nativeLibsPath);
+
+                        File nativeBuildCache = new File(getApplicationContext().getCacheDir(), "native_build");
+                        if (nativeBuildCache.exists()) {
+                            FileUtil.deleteFile(nativeBuildCache.getAbsolutePath());
+                        }
+
+                        updateBottomMenu();
+                        runOnUiThread(() -> SketchwareUtil.toast("Done cleaning temporary files!"));
+                    }).start();
+                return true;
+            });
         bottomMenu.add(0, 3, 2, "Show last compile error").setOnMenuItemClickListener(item -> {
-            new CompileErrorSaver(sc_id).showLastErrors(this);
-            return true;
-        });
+                new CompileErrorSaver(sc_id).showLastErrors(this);
+                return true;
+            });
         bottomMenu.add(0, 5, 3, "Show source code").setOnMenuItemClickListener(item -> {
-            showCurrentActivitySrcCode();
-            return true;
-        });
+                showCurrentActivitySrcCode();
+                return true;
+            });
 
         bottomMenu.add(1, 4, 5, "Install last built APK").setVisible(false).setOnMenuItemClickListener(item -> {
-            if (FileUtil.isExistFile(q.finalToInstallApkPath)) {
-                installBuiltApk();
-            } else SketchwareUtil.toast("APK doesn't exist anymore");
-            return true;
-        });
+                if (FileUtil.isExistFile(q.finalToInstallApkPath)) {
+                    installBuiltApk();
+                } else SketchwareUtil.toast("APK doesn't exist anymore");
+                return true;
+            });
         bottomMenu.add(1, 6, 6, "Show Apk signatures").setVisible(false).setOnMenuItemClickListener(item -> {
-            ApkSignatures apkSignatures = new ApkSignatures(this, q.finalToInstallApkPath);
-            apkSignatures.showSignaturesDialog();
-            return true;
-        });
+                ApkSignatures apkSignatures = new ApkSignatures(this, q.finalToInstallApkPath);
+                apkSignatures.showSignaturesDialog();
+                return true;
+            });
         bottomMenu.add(Menu.NONE, 7, Menu.NONE, "Direct XML editor").setOnMenuItemClickListener(item -> {
-            toViewCodeEditor();
-            return true;
-        });
+                toViewCodeEditor();
+                return true;
+            });
         bottomMenu.add(Menu.NONE, 10, 8, "Direct Java editor").setOnMenuItemClickListener(item -> {
-            toDirectJavaEditor();
-            return true;
-        });
+                toDirectJavaEditor();
+                return true;
+            });
 
         bottomPopupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-                btnOptions.setChecked(false);
-                btnOptions.setIconResource(R.drawable.ic_mtrl_arrow_down);
-            }
-        });
-
+                @Override
+                public void onDismiss(PopupMenu menu) {
+                    btnOptions.setChecked(false);
+                    btnOptions.setIconResource(R.drawable.ic_mtrl_arrow_down);
+                }
+            });
 
         xmlLayoutOrientation = findViewById(R.id.img_orientation);
         viewPager = findViewById(R.id.viewpager);
@@ -782,58 +782,58 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         viewPager.setOffscreenPageLimit(activeTabs.size() > 0 ? activeTabs.size() - 1 : 1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (currentTabNumber < activeTabs.size()) {
-                    String prevTabId = activeTabs.get(currentTabNumber);
-                    if (prevTabId.equals("event") && eventTabAdapter != null) {
-                        eventTabAdapter.c();
-                    } else if (prevTabId.equals("component") && componentTabAdapter != null) {
-                        componentTabAdapter.unselectAll();
-                    }
+                @Override
+                public void onPageScrollStateChanged(int state) {
                 }
-                
-                String currentTabId = activeTabs.get(position);
-                
-                if (currentTabId.equals("view")) {
-                    if (bottomMenu != null && bottomMenu.findItem(7) != null) bottomMenu.findItem(7).setVisible(true);
-                    if (viewTabAdapter != null) {
-                        viewTabAdapter.showHidePropertyView(true);
-                        xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_screen);
-                    }
-                } else {
-                    if (bottomMenu != null && bottomMenu.findItem(7) != null) bottomMenu.findItem(7).setVisible(false);
-                    if (viewTabAdapter != null) {
-                        xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_code);
-                        viewTabAdapter.showHidePropertyView(false);
-                    }
-                    if (currentTabId.equals("event") && eventTabAdapter != null) {
-                        eventTabAdapter.refreshEvents();
-                    } else if (currentTabId.equals("component") && componentTabAdapter != null) {
-                        componentTabAdapter.refreshData();
-                    }
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 }
-                
-                currentTabNumber = position;
-                refresh();
-                invalidateOptionsMenu();
-            }
-        });
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (currentTabNumber < activeTabs.size()) {
+                        String prevTabId = activeTabs.get(currentTabNumber);
+                        if (prevTabId.equals("event") && eventTabAdapter != null) {
+                            eventTabAdapter.c();
+                        } else if (prevTabId.equals("component") && componentTabAdapter != null) {
+                            componentTabAdapter.unselectAll();
+                        }
+                    }
+
+                    String currentTabId = activeTabs.get(position);
+
+                    if (currentTabId.equals("view")) {
+                        if (bottomMenu != null && bottomMenu.findItem(7) != null) bottomMenu.findItem(7).setVisible(true);
+                        if (viewTabAdapter != null) {
+                            viewTabAdapter.showHidePropertyView(true);
+                            xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_screen);
+                        }
+                    } else {
+                        if (bottomMenu != null && bottomMenu.findItem(7) != null) bottomMenu.findItem(7).setVisible(false);
+                        if (viewTabAdapter != null) {
+                            xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_code);
+                            viewTabAdapter.showHidePropertyView(false);
+                        }
+                        if (currentTabId.equals("event") && eventTabAdapter != null) {
+                            eventTabAdapter.refreshEvents();
+                        } else if (currentTabId.equals("component") && componentTabAdapter != null) {
+                            componentTabAdapter.refreshData();
+                        }
+                    }
+
+                    currentTabNumber = position;
+                    refresh();
+                    invalidateOptionsMenu();
+                }
+            });
         if (viewPager.getAdapter() != null) {
             viewPager.getAdapter().notifyDataSetChanged();
         }
-        
+
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        
+
         if (activeTabs.size() <= 2) {
             tabLayout.setTabMode(TabLayout.MODE_FIXED);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -860,11 +860,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void updateBottomMenu() {
         if (bottomMenu != null) {
             handler.post(() -> {
-                bottomMenu.findItem(2).setVisible(q != null && FileUtil.isExistFile(q.projectMyscPath));
-                var isDebugApkExists = isDebugApkExists();
-                bottomMenu.findItem(4).setVisible(isDebugApkExists);
-                bottomMenu.findItem(6).setVisible(isDebugApkExists);
-            });
+                    bottomMenu.findItem(2).setVisible(q != null && FileUtil.isExistFile(q.projectMyscPath));
+                    var isDebugApkExists = isDebugApkExists();
+                    bottomMenu.findItem(4).setVisible(isDebugApkExists);
+                    bottomMenu.findItem(6).setVisible(isDebugApkExists);
+                });
         }
     }
 
@@ -933,7 +933,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         DRProjectTracker.startNow(sc_id);
-        
+
         if (activeTabs != null && viewPager != null) {
             computeActiveTabs();
         }
@@ -969,7 +969,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (view.getId() == R.id.file_name_container) {
             if (activeTabs.isEmpty()) return;
             String currentTabId = activeTabs.get(viewPager.getCurrentItem());
-            
+
             if (currentTabId.equals("view")) {
                 showAvailableViews(false);
             } else if (currentTabId.equals("event") || currentTabId.equals("component")) {
@@ -987,29 +987,29 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setIcon(R.drawable.ic_mtrl_exit);
         dialog.setMessage(Helper.getResString(R.string.design_quit_message_confirm_save));
         dialog.setPositiveButton(Helper.getResString(R.string.design_quit_button_save_and_exit), (v, which) -> {
-            if (!mB.a()) {
-                v.dismiss();
-                try {
-                    saveChangesAndCloseProject();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    h();
+                if (!mB.a()) {
+                    v.dismiss();
+                    try {
+                        saveChangesAndCloseProject();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        h();
+                    }
                 }
-            }
-        });
+            });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_exit), (v, which) -> {
-            if (!mB.a()) {
-                v.dismiss();
-                try {
-                    k();
-                    DiscardChangesProjectCloser discardChangesProjectCloser = new DiscardChangesProjectCloser(this);
-                    discardChangesProjectCloser.execute();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    h();
+                if (!mB.a()) {
+                    v.dismiss();
+                    try {
+                        k();
+                        DiscardChangesProjectCloser discardChangesProjectCloser = new DiscardChangesProjectCloser(this);
+                        discardChangesProjectCloser.execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        h();
+                    }
                 }
-            }
-        });
+            });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
     }
@@ -1072,48 +1072,48 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setTitle(Helper.getResString(R.string.design_restore_data_title));
         dialog.setMessage(Helper.getResString(R.string.design_restore_data_message_confirm));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_restore), (v, which) -> {
-            if (!mB.a()) {
-                boolean g = jC.c(sc_id).g();
-                boolean g2 = jC.b(sc_id).g();
-                boolean q = jC.d(sc_id).q();
-                boolean d = jC.a(sc_id).d();
-                boolean c = jC.a(sc_id).c();
-                if (g) {
-                    jC.c(sc_id).h();
+                if (!mB.a()) {
+                    boolean g = jC.c(sc_id).g();
+                    boolean g2 = jC.b(sc_id).g();
+                    boolean q = jC.d(sc_id).q();
+                    boolean d = jC.a(sc_id).d();
+                    boolean c = jC.a(sc_id).c();
+                    if (g) {
+                        jC.c(sc_id).h();
+                    }
+                    if (g2) {
+                        jC.b(sc_id).h();
+                    }
+                    if (q) {
+                        jC.d(sc_id).r();
+                    }
+                    if (d) {
+                        jC.a(sc_id).h();
+                    }
+                    if (c) {
+                        jC.a(sc_id).f();
+                    }
+                    if (g) {
+                        jC.b(sc_id).a(jC.c(sc_id));
+                        jC.a(sc_id).a(jC.c(sc_id).d());
+                    }
+                    if (g2 || g) {
+                        jC.a(sc_id).a(jC.b(sc_id));
+                    }
+                    if (q) {
+                        jC.a(sc_id).c(jC.d(sc_id));
+                        jC.a(sc_id).a(jC.d(sc_id));
+                    }
+                    viewDirty = true;
+                    refresh();
+                    B = false;
+                    v.dismiss();
                 }
-                if (g2) {
-                    jC.b(sc_id).h();
-                }
-                if (q) {
-                    jC.d(sc_id).r();
-                }
-                if (d) {
-                    jC.a(sc_id).h();
-                }
-                if (c) {
-                    jC.a(sc_id).f();
-                }
-                if (g) {
-                    jC.b(sc_id).a(jC.c(sc_id));
-                    jC.a(sc_id).a(jC.c(sc_id).d());
-                }
-                if (g2 || g) {
-                    jC.a(sc_id).a(jC.b(sc_id));
-                }
-                if (q) {
-                    jC.a(sc_id).c(jC.d(sc_id));
-                    jC.a(sc_id).a(jC.d(sc_id));
-                }
-                viewDirty = true;
-                refresh();
+            });
+        dialog.setNegativeButton(Helper.getResString(R.string.common_word_no), (v, which) -> {
                 B = false;
                 v.dismiss();
-            }
-        });
-        dialog.setNegativeButton(Helper.getResString(R.string.common_word_no), (v, which) -> {
-            B = false;
-            v.dismiss();
-        });
+            });
         dialog.setCancelable(false);
         dialog.show();
     }
@@ -1122,19 +1122,19 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (projectFile == null) return;
         k();
         new Thread(() -> {
-            var filename = Helper.getText(fileName);
-            var code = new yq(getApplicationContext(), sc_id).getFileSrc(filename, jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
-            runOnUiThread(() -> {
-                if (isFinishing()) return;
-                h();
-                if (code.isEmpty()) {
-                    SketchwareUtil.toast("Failed to generate source.");
-                    return;
-                }
-                var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
-                launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
-            });
-        }).start();
+                var filename = Helper.getText(fileName);
+                var code = new yq(getApplicationContext(), sc_id).getFileSrc(filename, jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
+                runOnUiThread(() -> {
+                        if (isFinishing()) return;
+                        h();
+                        if (code.isEmpty()) {
+                            SketchwareUtil.toast("Failed to generate source.");
+                            return;
+                        }
+                        var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
+                        launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
+                    });
+            }).start();
     }
 
     private void showAvailableJavaFiles() {
@@ -1146,12 +1146,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         var adapter = new JavaFileAdapter(sc_id);
         adapter.setOnItemClickListener(projectFileBean -> {
-            projectFile = projectFileBean;
-            refreshFileSelector();
-            refreshEventTabAdapter();
-            refreshComponentTabAdapter();
-            dialog.dismiss();
-        });
+                projectFile = projectFileBean;
+                refreshFileSelector();
+                refreshEventTabAdapter();
+                refreshComponentTabAdapter();
+                dialog.dismiss();
+            });
         recyclerView.setAdapter(adapter);
         dialog.setView(customView);
         dialog.show();
@@ -1173,25 +1173,25 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (projectFile == null) return;
         k();
         new Thread(() -> {
-            String filename = Helper.getText(fileName);
-            var xmlGenerator = new Ox(q.N, projectFile);
-            var projectDataManager = jC.a(sc_id);
-            var viewBeans = projectDataManager.d(filename);
-            var viewFab = projectDataManager.h(filename);
-            xmlGenerator.setExcludeAppCompat(true);
-            xmlGenerator.a(eC.a(viewBeans), viewFab);
-            String content = xmlGenerator.b();
-            runOnUiThread(() -> {
-                if (isFinishing()) return;
-                h();
-                launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
-            });
-        }).start();
+                String filename = Helper.getText(fileName);
+                var xmlGenerator = new Ox(q.N, projectFile);
+                var projectDataManager = jC.a(sc_id);
+                var viewBeans = projectDataManager.d(filename);
+                var viewFab = projectDataManager.h(filename);
+                xmlGenerator.setExcludeAppCompat(true);
+                xmlGenerator.a(eC.a(viewBeans), viewFab);
+                String content = xmlGenerator.b();
+                runOnUiThread(() -> {
+                        if (isFinishing()) return;
+                        h();
+                        launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
+                    });
+            }).start();
     }
 
     private void toDirectJavaEditor() {
         if (projectFile == null) return;
-        
+
         String javaName = projectFile.getJavaName();
         if (javaName == null || javaName.isEmpty() || !javaName.endsWith(".java")) {
             javaName = ProjectFileBean.DEFAULT_JAVA_NAME;
@@ -1224,42 +1224,42 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         File target = new File(dir, javaName);
         if (target.exists()) {
             new MaterialAlertDialogBuilder(this)
-                    .setTitle("File already exists")
-                    .setMessage("File " + javaName + " It's already in the java folder. Overwrite it with code from the block?")
-                    .setPositiveButton("Overwrite", (dialog, which) -> generate(pkg, target, javaName))
-                    .setNeutralButton("Open", (dialog, which) -> openEditor(target, javaName))
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                    .show();
+            .setTitle("File already exists")
+            .setMessage("File " + javaName + " It's already in the java folder. Overwrite it with code from the block?")
+            .setPositiveButton("Overwrite", (dialog, which) -> generate(pkg, target, javaName))
+            .setNeutralButton("Open", (dialog, which) -> openEditor(target, javaName))
+            .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+            .show();
         } else {
             generate(pkg, target, javaName);
         }
     }
 
-private void generate(String pkg, File target, String javaName) {
-    k();
-    new Thread(() -> {
-        String rawCode = new yq(getApplicationContext(), sc_id).getFileSrc(javaName, jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
-        final String code = fixPackage(rawCode, pkg);
-        runOnUiThread(() -> {
-            if (isFinishing()) return;
-            h();
-            if (code == null || code.isEmpty()) {
-                SketchwareUtil.toast("Failed to generate source.");
-                return;
-            }
-            FileUtil.writeFile(target.getAbsolutePath(), code);
-            openEditor(target, javaName);
-        });
-    }).start();
-}
-
-private String fixPackage(String code, String pkg) {
-    if (code == null || code.isEmpty()) return code;
-    if (!code.matches("(?s).*(?m)^package [^;]+;.*")) {
-        return "package " + pkg + ";\n\n" + code;
+    private void generate(String pkg, File target, String javaName) {
+        k();
+        new Thread(() -> {
+                String rawCode = new yq(getApplicationContext(), sc_id).getFileSrc(javaName, jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
+                final String code = fixPackage(rawCode, pkg);
+                runOnUiThread(() -> {
+                        if (isFinishing()) return;
+                        h();
+                        if (code == null || code.isEmpty()) {
+                            SketchwareUtil.toast("Failed to generate source.");
+                            return;
+                        }
+                        FileUtil.writeFile(target.getAbsolutePath(), code);
+                        openEditor(target, javaName);
+                    });
+            }).start();
     }
-    return code.replaceFirst("(?m)^package [^;]+;", "package " + pkg + ";");
-}
+
+    private String fixPackage(String code, String pkg) {
+        if (code == null || code.isEmpty()) return code;
+        if (!code.matches("(?s).*(?m)^package [^;]+;.*")) {
+            return "package " + pkg + ";\n\n" + code;
+        }
+        return code.replaceFirst("(?m)^package [^;]+;", "package " + pkg + ";");
+    }
 
     private void openEditor(File target, String javaName) {
         Intent intent = new Intent(this, SrcCodeEditor.class);
@@ -1426,7 +1426,7 @@ private String fixPackage(String code, String pkg) {
     void toDayDream() {
         launchActivity(DayDreamGeneralSettings.class, openLibraryManager);
     }
-    
+
     void toAidlManager() {
         launchActivity(ManageAidlActivity.class, null, new Pair<>("pkgName", q != null ? q.packageName : ""));
     }
@@ -1449,15 +1449,15 @@ private String fixPackage(String code, String pkg) {
 
     private void showMissingToolsDialog() {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("Missing Tools")
-                .setMessage("Required build tools (AAPT/SDK) are not downloaded yet. Please download them in App Settings to run your project.")
-                .setPositiveButton("Open Settings", (dialog, which) -> {
-                    Intent intent = new Intent(this, AppSettings.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        .setTitle("Missing Tools")
+        .setMessage("Required build tools (AAPT/SDK) are not downloaded yet. Please download them in App Settings to run your project.")
+        .setPositiveButton("Open Settings", (dialog, which) -> {
+                Intent intent = new Intent(this, AppSettings.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            })
+        .setNegativeButton("Cancel", null)
+        .show();
     }
 
     private abstract static class BaseTask {
@@ -1511,13 +1511,13 @@ private String fixPackage(String code, String pkg) {
             if (activity == null) return;
 
             activity.runOnUiThread(() -> {
-                DRProjectTracker.startNow(sc_id);
-                updateRunButton(true);
-                activity.r.a("P1I10", true);
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    DRProjectTracker.startNow(sc_id);
+                    updateRunButton(true);
+                    activity.r.a("P1I10", true);
+                    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-                maybeShowNotification();
-            });
+                    maybeShowNotification();
+                });
         }
 
         private void doInBackground() {
@@ -1556,12 +1556,12 @@ private String fixPackage(String code, String pkg) {
                 };
 
                 org.sketchware.daygreen.builds.BuildTaskNew buildTaskNew = new org.sketchware.daygreen.builds.BuildTaskNew(
-                        activity.getApplicationContext(), 
-                        activity.q, 
-                        DesignActivity.sc_id, 
-                        this,
-                        buildListener, 
-                        () -> isCanceling
+                    activity.getApplicationContext(),
+                    activity.q,
+                    DesignActivity.sc_id,
+                    this,
+                    buildListener,
+                    () -> isCanceling
                 );
 
                 boolean success = buildTaskNew.run();
@@ -1571,29 +1571,29 @@ private String fixPackage(String code, String pkg) {
 
             } catch (MissingFileException e) {
                 activity.runOnUiThread(() -> {
-                    boolean isMissingDirectory = e.isMissingDirectory();
+                        boolean isMissingDirectory = e.isMissingDirectory();
 
-                    MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
-                    if (isMissingDirectory) {
-                        dialog.setTitle("Missing directory detected");
-                        dialog.setMessage("A directory important for building is missing. " +
+                        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
+                        if (isMissingDirectory) {
+                            dialog.setTitle("Missing directory detected");
+                            dialog.setMessage("A directory important for building is missing. " +
                                 "Sketchware Pro can try creating " + e.getMissingFile().getAbsolutePath() +
                                 " if you'd like to.");
-                        dialog.setNeutralButton("Create", (v, which) -> {
-                            v.dismiss();
-                            if (!e.getMissingFile().mkdirs()) {
-                                SketchwareUtil.toastError("Failed to create directory / directories!");
-                            }
-                        });
-                    } else {
-                        dialog.setTitle("Missing file detected");
-                        dialog.setMessage("A file needed for building is missing. " +
+                            dialog.setNeutralButton("Create", (v, which) -> {
+                                    v.dismiss();
+                                    if (!e.getMissingFile().mkdirs()) {
+                                        SketchwareUtil.toastError("Failed to create directory / directories!");
+                                    }
+                                });
+                        } else {
+                            dialog.setTitle("Missing file detected");
+                            dialog.setMessage("A file needed for building is missing. " +
                                 "Put the correct file back to " + e.getMissingFile().getAbsolutePath() +
                                 " and try building again.");
-                    }
-                    dialog.setPositiveButton("Dismiss", null);
-                    dialog.show();
-                });
+                        }
+                        dialog.setPositiveButton("Dismiss", null);
+                        dialog.show();
+                    });
             } catch (zy zy) {
                 activity.indicateCompileErrorOccurred(zy.getMessage());
                 Log.e("DesignActivity$BuildTask", "", zy);
@@ -1607,10 +1607,10 @@ private String fixPackage(String code, String pkg) {
                 isBuilding = false;
                 activity.runOnUiThread(this::onPostExecute);
                 DRSettings.getAutoCleanUpAfterBuild(activity, isClean -> {
-                    if (isClean) {
-                        new Thread(() -> CleanUpCore.cleanUpAfterBuildInDesign(sc_id)).start();
-                    }
-                });
+                        if (isClean) {
+                            new Thread(() -> CleanUpCore.cleanUpAfterBuildInDesign(sc_id)).start();
+                        }
+                    });
             }
         }
 
@@ -1620,9 +1620,9 @@ private String fixPackage(String code, String pkg) {
             if (activity == null) return;
 
             activity.runOnUiThread(() -> {
-                progressQueue.add(new android.util.Pair<>(progress, step));
-                processNextProgress();
-            });
+                    progressQueue.add(new android.util.Pair<>(progress, step));
+                    processNextProgress();
+                });
         }
 
         private void processNextProgress() {
@@ -1647,13 +1647,13 @@ private String fixPackage(String code, String pkg) {
             DesignActivity activity = getActivity();
             if (activity != null) {
                 activity.handler.postDelayed(() -> {
-                    isProcessingProgress = false;
-                    if (!progressQueue.isEmpty()) {
-                        processNextProgress();
-                    } else if (isBuildFinished) {
-                        finishUI();
-                    }
-                }, 200); 
+                        isProcessingProgress = false;
+                        if (!progressQueue.isEmpty()) {
+                            processNextProgress();
+                        } else if (isBuildFinished) {
+                            finishUI();
+                        }
+                    }, 200);
             } else {
                 isProcessingProgress = false;
             }
@@ -1664,13 +1664,13 @@ private String fixPackage(String code, String pkg) {
             if (activity == null) return;
 
             activity.runOnUiThread(() -> {
-                isBuildFinished = true;
-                if (progressQueue.isEmpty() && !isProcessingProgress) {
-                    finishUI();
-                }
-            });
+                    isBuildFinished = true;
+                    if (progressQueue.isEmpty() && !isProcessingProgress) {
+                        finishUI();
+                    }
+                });
         }
-        
+
         private void finishUI() {
             DesignActivity activity = getActivity();
             if (activity == null || activity.isDestroyed()) return;
@@ -1689,10 +1689,10 @@ private String fixPackage(String code, String pkg) {
             DesignActivity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
-                    progressQueue.clear();
-                    onProgress("Canceling build...", -1);
-                    activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                });
+                        progressQueue.clear();
+                        onProgress("Canceling build...", -1);
+                        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    });
             }
             if (isShowingNotification) {
                 notificationManager.cancel(notificationId);
@@ -1708,12 +1708,12 @@ private String fixPackage(String code, String pkg) {
                 createNotificationChannelIfNeeded();
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_mtrl_code)
-                        .setContentTitle("Building project")
-                        .setContentText("Starting build...")
-                        .setOngoing(true)
-                        .setProgress(0, 0, true)
-                        .addAction(R.drawable.ic_cancel_white_96dp, "Cancel build", getCancelPendingIntent());
+                .setSmallIcon(R.drawable.ic_mtrl_code)
+                .setContentTitle("Building project")
+                .setContentText("Starting build...")
+                .setOngoing(true)
+                .setProgress(0, 0, true)
+                .addAction(R.drawable.ic_cancel_white_96dp, "Cancel build", getCancelPendingIntent());
 
                 notificationManager.notify(notificationId, builder.build());
                 isShowingNotification = true;
@@ -1725,12 +1725,12 @@ private String fixPackage(String code, String pkg) {
             if (activity == null) return;
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_mtrl_code)
-                    .setContentTitle("Building project")
-                    .setContentText(progress)
-                    .setOngoing(true)
-                    .setProgress(0, 0, true)
-                    .addAction(R.drawable.ic_cancel_white_96dp, "Cancel Build", getCancelPendingIntent());
+            .setSmallIcon(R.drawable.ic_mtrl_code)
+            .setContentTitle("Building project")
+            .setContentText(progress)
+            .setOngoing(true)
+            .setProgress(0, 0, true)
+            .addAction(R.drawable.ic_cancel_white_96dp, "Cancel Build", getCancelPendingIntent());
 
             notificationManager.notify(notificationId, builder.build());
         }
@@ -1786,14 +1786,14 @@ private String fixPackage(String code, String pkg) {
             if (activity != null) {
                 activity.loadProject(savedInstanceState != null);
                 activity.runOnUiThread(() -> {
-                    activity.viewDirty = true;
-                    activity.updateBottomMenu();
-                    activity.refresh();
-                    activity.h();
-                    if (savedInstanceState == null) {
-                        activity.checkForUnsavedProjectData();
-                    }
-                });
+                        activity.viewDirty = true;
+                        activity.updateBottomMenu();
+                        activity.refresh();
+                        activity.h();
+                        if (savedInstanceState == null) {
+                            activity.checkForUnsavedProjectData();
+                        }
+                    });
             }
         }
     }
@@ -1818,9 +1818,9 @@ private String fixPackage(String code, String pkg) {
                 jC.d(sc_id).w();
                 jC.d(sc_id).u();
                 activity.runOnUiThread(() -> {
-                    activity.h();
-                    activity.finish();
-                });
+                        activity.h();
+                        activity.finish();
+                    });
             }
         }
     }
@@ -1847,13 +1847,13 @@ private String fixPackage(String code, String pkg) {
                 jC.d(sc_id).x();
                 jC.c(sc_id).l();
                 activity.runOnUiThread(() -> {
-                    bB.a(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), bB.TOAST_NORMAL).show();
-                    activity.saveVersionCodeInformationToProject();
-                    activity.h();
-                    jC.d(sc_id).f();
-                    jC.d(sc_id).g();
-                    jC.d(sc_id).e();
-                });
+                        bB.a(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), bB.TOAST_NORMAL).show();
+                        activity.saveVersionCodeInformationToProject();
+                        activity.h();
+                        jC.d(sc_id).f();
+                        jC.d(sc_id).g();
+                        jC.d(sc_id).e();
+                    });
             }
         }
     }
@@ -1881,11 +1881,11 @@ private String fixPackage(String code, String pkg) {
                 jC.c(sc_id).l();
                 jC.d(sc_id).h();
                 activity.runOnUiThread(() -> {
-                    bB.a(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), bB.TOAST_NORMAL).show();
-                    activity.saveVersionCodeInformationToProject();
-                    activity.h();
-                    activity.finish();
-                });
+                        bB.a(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), bB.TOAST_NORMAL).show();
+                        activity.saveVersionCodeInformationToProject();
+                        activity.h();
+                        activity.finish();
+                    });
             }
         }
     }
@@ -1913,7 +1913,7 @@ private String fixPackage(String code, String pkg) {
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
-        
+
         public ViewPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
@@ -1938,19 +1938,21 @@ private String fixPackage(String code, String pkg) {
             String tabId = activeTabs.get(position);
             switch (tabId) {
                 case "view":
-                    return Helper.getResString(R.string.design_tab_title_view);
+                return Helper.getResString(R.string.design_tab_title_view);
                 case "event":
-                    return Helper.getResString(R.string.design_tab_title_event);
+                return Helper.getResString(R.string.design_tab_title_event);
                 case "component":
-                    return Helper.getResString(R.string.design_tab_title_component);
+                return Helper.getResString(R.string.design_tab_title_component);
                 case "java":
-                    return Helper.getResString(R.string.design_tab_title_java);
+                return Helper.getResString(R.string.design_tab_title_java);
                 case "resource":
-                    return Helper.getResString(R.string.design_tab_title_resource);
+                return Helper.getResString(R.string.design_tab_title_resource);
+                case "ai":
+                return "Agent";
                 case "git":
-                    return "Git";
+                return "Git";
                 default:
-                    return "";
+                return "";
             }
         }
 
@@ -1975,30 +1977,32 @@ private String fixPackage(String code, String pkg) {
             String tabId = activeTabs.get(position);
             switch (tabId) {
                 case "view":
-                    return new ViewEditorFragment();
+                return new ViewEditorFragment();
                 case "event":
-                    return new rs();
+                return new rs();
                 case "component":
-                    return new br();
+                return new br();
                 case "java":
-                    String pkgName = "";
-                    if (q != null) {
-                        pkgName = q.packageName;
-                    } else {
-                        HashMap<String, Object> projectInfo = lC.b(sc_id);
-                        if (projectInfo != null && projectInfo.containsKey("my_sc_pkg_name")) {
-                            pkgName = (String) projectInfo.get("my_sc_pkg_name");
-                        } else if (projectInfo != null && projectInfo.containsKey("my_ws_pkg_name")) {
-                            pkgName = (String) projectInfo.get("my_ws_pkg_name");
-                        }
+                String pkgName = "";
+                if (q != null) {
+                    pkgName = q.packageName;
+                } else {
+                    HashMap<String, Object> projectInfo = lC.b(sc_id);
+                    if (projectInfo != null && projectInfo.containsKey("my_sc_pkg_name")) {
+                        pkgName = (String) projectInfo.get("my_sc_pkg_name");
+                    } else if (projectInfo != null && projectInfo.containsKey("my_ws_pkg_name")) {
+                        pkgName = (String) projectInfo.get("my_ws_pkg_name");
                     }
-                    return ManageJavaFragment.newInstance(sc_id, pkgName);
+                }
+                return ManageJavaFragment.newInstance(sc_id, pkgName);
                 case "resource":
-                    return ManageResourceFragment.newInstance(sc_id);
+                return ManageResourceFragment.newInstance(sc_id);
+                case "ai":
+                return AiChatFragment.newInstance(sc_id, projectFile != null ? projectFile.getJavaName() : ProjectFileBean.DEFAULT_JAVA_NAME);
                 case "git":
-                    return ManageGitFragment.newInstance(sc_id);
+                return ManageGitFragment.newInstance(sc_id);
                 default:
-                    return new Fragment();
+                return new Fragment();
             }
         }
     }
