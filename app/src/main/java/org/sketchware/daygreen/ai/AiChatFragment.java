@@ -129,7 +129,7 @@ public class AiChatFragment extends Fragment {
     private boolean deepThinking;
     private boolean busy;
     private PopupWindow popup;
-    private View emptyHint;
+    private TextView emptyHint;
 
     private final ActivityResultLauncher<String[]> pickFile = registerForActivityResult(
             new ActivityResultContracts.OpenDocument(), uri -> {
